@@ -6,7 +6,7 @@ on:
 jobs:
   secure-rdp:
     runs-on: windows-latest
-    timeout-minutes: 3600
+    timeout-minutes: 9999
 
     steps:
       - name: Configure Core RDP Settings
@@ -46,13 +46,13 @@ jobs:
           $rawPassword += $charSet.Special | Get-Random -Count 4
           $password = -join ($rawPassword | Sort-Object { Get-Random })
           $securePass = ConvertTo-SecureString $password -AsPlainText -Force
-          New-LocalUser -Name "Skyro" -Password $securePass -AccountNeverExpires
-          Add-LocalGroupMember -Group "Administrators" -Member "Skyro"
-          Add-LocalGroupMember -Group "Remote Desktop Users" -Member "Skyro"
+          New-LocalUser -Name "Bird" -Password $securePass -AccountNeverExpires
+          Add-LocalGroupMember -Group "Administrators" -Member "Bird"
+          Add-LocalGroupMember -Group "Remote Desktop Users" -Member "Bird"
           
           echo "RDP_CREDS=User: Skyro | Password: $password" >> $env:GITHUB_ENV
           
-          if (-not (Get-LocalUser -Name "Skyro")) {
+          if (-not (Get-LocalUser -Name "Bird")) {
               Write-Error "User creation failed"
               exit 1
           }
@@ -102,7 +102,7 @@ jobs:
         run: |
           Write-Host "`n=== RDP ACCESS ==="
           Write-Host "Address: $env:TAILSCALE_IP"
-          Write-Host "Username: Skyro"
+          Write-Host "Username: Bird"
           Write-Host "Password: $(echo $env:RDP_CREDS)"
           Write-Host "==================`n"
           
